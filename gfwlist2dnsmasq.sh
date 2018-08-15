@@ -1,4 +1,4 @@
-#/bin/sh
+#!/bin/sh
 
 # Name:        gfwlist2dnsmasq.sh
 # Desription:  A shell script which convert gfwlist into dnsmasq rules.
@@ -90,12 +90,12 @@ check_depends(){
 
 get_args(){
     OUT_TYPE='DNSMASQ_RULES'
-    DNS_IP='127.0.0.1'
-    DNS_PORT='5353'
-    IPSET_NAME=''
-    FILE_FULLPATH=''
+    DNS_IP='8.8.8.8'
+    DNS_PORT='53'
+    IPSET_NAME='gfwlist'
+    OUT_FILE='/etc/dnsmasq.d/gfwlist.conf'
     CURL_EXTARG=''
-    WITH_IPSET=0
+    WITH_IPSET=1
     EXTRA_DOMAIN_FILE=''
     EXCLUDE_DOMAIN_FILE=''
     IPV4_PATTERN='^((2[0-4][0-9]|25[0-5]|[01]?[0-9][0-9]?)\.){3}(2[0-4][0-9]|25[0-5]|[01]?[0-9][0-9]?)$'
@@ -291,14 +291,10 @@ ipset=/\1/'$IPSET_NAME'#g' > $CONF_TMP_FILE
 }
 
 main() {
-    if [ -z "$1" ]; then
-        usage 0
-    else
-        check_depends
-        get_args "$@"
-        _green '\nJob Started.\n\n'
-        process
-    fi
+    check_depends
+    get_args "$@"
+    _green '\nJob Started.\n\n'
+    process
 }
 
 main "$@"
